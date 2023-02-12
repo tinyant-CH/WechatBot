@@ -45,7 +45,7 @@ export class ChatGPTPool {
       try {
         chatGPTItem.chatGpt = new ChatGPTAPIBrowser({
           ...account,
-          //proxyServer: config.openAIProxy,
+          proxyServer: config.openAIProxy,
         });
       } catch (err) {
         //remove this object
@@ -69,17 +69,22 @@ export class ChatGPTPool {
         ...account,
         proxyServer: config.openAIProxy,
       });
-      await AsyncRetry(
-        async () => {
+      try {
+        await AsyncRetry(
+          async () => {
             await chatGpt.initSession();
           },
           { retries: 3 }
-      );
-      chatGPTPools.push({
-         chatGpt: chatGpt,
-         account: account,
-      });
-
+        );
+        chatGPTPools.push({
+          chatGpt: chatGpt,
+          account: account,
+        });
+      } catch {
+        console.error(
+          `Try init account: ${account.email} failed, remove it from pool`
+        );
+      }
     }
     // this.chatGPTPools = await Promise.all(
     //   config.chatGPTAccountPool.map(async (account) => {
