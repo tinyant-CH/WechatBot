@@ -45,7 +45,7 @@ export class ChatGPTPool {
       try {
         chatGPTItem.chatGpt = new ChatGPTAPIBrowser({
           ...account,
-          proxyServer: config.openAIProxy,
+          //proxyServer: config.openAIProxy,
         });
       } catch (err) {
         //remove this object
