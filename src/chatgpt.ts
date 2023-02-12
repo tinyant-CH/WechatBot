@@ -69,22 +69,17 @@ export class ChatGPTPool {
         ...account,
         proxyServer: config.openAIProxy,
       });
-      try {
-        await AsyncRetry(
-          async () => {
+      await AsyncRetry(
+        async () => {
             await chatGpt.initSession();
           },
           { retries: 3 }
-        );
-        chatGPTPools.push({
-          chatGpt: chatGpt,
-          account: account,
-        });
-      } catch {
-        console.error(
-          `Try init account: ${account.email} failed, remove it from pool`
-        );
-      }
+      );
+      chatGPTPools.push({
+         chatGpt: chatGpt,
+         account: account,
+      });
+
     }
     // this.chatGPTPools = await Promise.all(
     //   config.chatGPTAccountPool.map(async (account) => {
